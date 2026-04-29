@@ -27,7 +27,6 @@ Designed for risk analysts, data scientists, and model validators, this pipeline
   - Trained model saved as `models/model.pkl` (pickle format)
   - Best hyperparameters (if tuned) → `results/best_params.json`
   - Evaluation metrics → `results/metrics.json`
-  - Runtime logs → `logs/app.log`
 
 ---
 
@@ -41,7 +40,6 @@ credit-score-build/
 │       └── your_data.csv     # ← Place your dataset here
 ├── models/                   # Saved trained models (.pkl)
 ├── results/                  # Metrics, plots, reports
-├── logs/                     # Execution logs
 ├── src/                      # Source code modules
 │   ├── data_loader.py
 │   ├── trainer.py
