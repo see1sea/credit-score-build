@@ -10,23 +10,23 @@ Designed for risk analysts, data scientists, and model validators, this pipeline
 ## ✨ Key Features
 
 - **Automated Data Loading & Preprocessing**: Handles date parsing, missing value checks, and basic type alignment.
-- **Flexible OOT Splitting Strategies**:
-  - 📅 **Single-month holdout**: Specify `year` and `month` (e.g., `2025-12`)
-  - 📆 **Custom date range**: Define `start_date` and `end_date` for flexible test windows (e.g., Q4 2025)
-- **Optional Hyperparameter Tuning**:  
-  Bayesian optimization via `scikit-optimize` (`skopt`) to maximize AUC on the OOT validation set.
-- **Robust Model Training**:  
-  Trains an XGBoost classifier with early stopping (if validation set is enabled).
-- **Comprehensive Evaluation**:
-  - Area Under ROC Curve (**AUC**)
-  - **Accuracy**, **Precision**, **Recall**, **F1-Score**
-  - Full **Classification Report** (by class)
-- **Model Interpretability**:
-  - Saves a feature importance plot (`results/feature_importance.png`) based on `gain`
-- **Artifact Persistence**:
-  - Trained model saved as `models/model.pkl` (pickle format)
-  - Best hyperparameters (if tuned) → `results/best_params.json`
-  - Evaluation metrics → `results/metrics.json`
+  - **Flexible OOT Splitting Strategies**:
+    - 📅 **Single-month holdout**: Specify `year` and `month` (e.g., `2025-12`)
+    - 📆 **Custom date range**: Define `start_date` and `end_date` for flexible test windows (e.g., Q4 2025)
+  - **Optional Hyperparameter Tuning**:  
+    Bayesian optimization via `scikit-optimize` (`skopt`) to maximize AUC on the OOT validation set.
+  - **Robust Model Training**:  
+    Trains an XGBoost classifier with early stopping (if validation set is enabled).
+  - **Comprehensive Evaluation**:
+    - Area Under ROC Curve (**AUC**)
+    - **Accuracy**, **Precision**, **Recall**, **F1-Score**
+    - Full **Classification Report** (by class)
+  - **Model Interpretability**:
+    - Saves a feature importance plot (`results/feature_importance.png`) based on `gain`
+  - **Artifact Persistence**:
+    - Trained model saved as `models/model.pkl` (pickle format)
+    - Best hyperparameters (if tuned) → `results/best_params.json`
+    - Evaluation metrics → `results/metrics.json`
 
 ---
 
@@ -48,7 +48,6 @@ credit-score-build/
 ├── main.py                   # Entry point
 ├── requirements.txt          # Python dependencies
 ├── init_dev_env.sh           # Linux/macOS setup script
-├── init_dev_env.ps1          # Windows PowerShell setup script
 └── README.md
 ```
 
@@ -60,9 +59,9 @@ credit-score-build/
 ### 1. Prepare Your Data
 - Place your credit risk dataset as a CSV file at:  
   `data/raw/your_data.csv`
-- The file must contain:
-  - A **date column** indicating when each application/loan was observed (e.g., `application_date`, `observation_date`)
-  - A **binary target variable** indicating default/non-default (e.g., `is_default`, `bad_flag`) — values should be `0` or `1`.
+  - The file must contain:
+    - A **date column** indicating when each application/loan was observed (e.g., `application_date`, `observation_date`)
+    - A **binary target variable** indicating default/non-default (e.g., `is_default`, `bad_flag`) — values should be `0` or `1`.
 
 > 🔧 **Important**: Update the column names in `config/config.yaml` under the `data_schema` section:
 > ```yaml
@@ -125,19 +124,19 @@ python main.py
 ```
 The script will:
 - Load and validate your data
-- Split into train (in-time) and test (OOT) sets
-- (Optionally) perform hyperparameter tuning
-- Train the final model
-- Evaluate on the OOT test set
-- Save all outputs
+  - Split into train (in-time) and test (OOT) sets
+  - (Optionally) perform hyperparameter tuning
+  - Train the final model
+  - Evaluate on the OOT test set
+  - Save all outputs
 
 ### 5. Review Results
 After successful execution, explore:
 - models/model.pkl → Loadable XGBoost model for scoring
-- results/metrics.json → JSON with AUC, accuracy, etc.
-- results/feature_importance.png → Visual ranking of predictive features
-- logs/app.log → Timestamped log of all pipeline steps
-- Example metrics.json:
+  - results/metrics.json → JSON with AUC, accuracy, etc.
+  - results/feature_importance.png → Visual ranking of predictive features
+  - logs/app.log → Timestamped log of all pipeline steps
+  - Example metrics.json:
 ```json
 {
   "auc": 0.842,
@@ -150,14 +149,14 @@ After successful execution, explore:
 ```
 ## 🧪 Requirements
 - Python: ≥ 3.8
-- Key Dependencies:
-  - xgboost >= 2.0
-  - scikit-learn >= 1.2
-  - scikit-optimize >= 0.9 (only if tuning is enabled)
-  - pandas >= 1.5
-  - numpy >= 1.21
-  - matplotlib >= 3.5
-  - PyYAML >= 6.0
+  - Key Dependencies:
+    - xgboost >= 2.0
+    - scikit-learn >= 1.2
+    - scikit-optimize >= 0.9 (only if tuning is enabled)
+    - pandas >= 1.5
+    - numpy >= 1.21
+    - matplotlib >= 3.5
+    - PyYAML >= 6.0
 
 Install all via:
 ```shell
@@ -169,15 +168,15 @@ You are free to use, modify, and distribute this code for personal or commercial
 ## 🙌 Contributing
 We welcome contributions! Suggested enhancements:
 - Add support for LightGBM or CatBoost
-- Integrate with MLflow or Weights & Biases for experiment tracking
-- Add unit tests (pytest) and CI/CD (GitHub Actions)
-- Support Docker containerization
-- Include PSI (Population Stability Index) monitoring
-To contribute:
-- Fork the repository
-- Create a feature branch (git checkout -b feature/your-feature)
-- Commit your changes (git commit -m 'Add some feature')
-- Push to the branch (git push origin feature/your-feature)
-- Open a Pull Request
+  - Integrate with MLflow or Weights & Biases for experiment tracking
+  - Add unit tests (pytest) and CI/CD (GitHub Actions)
+  - Support Docker containerization
+  - Include PSI (Population Stability Index) monitoring
+  To contribute:
+  - Fork the repository
+  - Create a feature branch (git checkout -b feature/your-feature)
+  - Commit your changes (git commit -m 'Add some feature')
+  - Push to the branch (git push origin feature/your-feature)
+  - Open a Pull Request
 ## 💡 Best Practice Note:
 This pipeline enforces ***temporal integrity*** by design — the OOT test set always represents future observations unseen during training. This mimics real-world scoring conditions 
