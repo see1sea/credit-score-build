@@ -1,0 +1,32 @@
+# docker-compose.yml
+services:
+  dev:
+    image: continuumio/miniconda3
+    container_name: credit-model-dev
+    volumes:
+      # 挂载项目代码（实时同步）
+      - .:/app
+
+      # Conda 环境持久化到上一级目录的 .credit-cache/conda-envs
+      - ../credit-score-build-cache/conda-envs:/opt/conda/envs
+
+      # pip 缓存也放上一级（如果你用 pip 安装包）
+      - ../credit-score-build-cache/pip-cache:/root/.cache/pip
+
+      # 挂载依赖文件（保持不变）
+      - ./requirements.txt:/app/requirements.txt
+
+
+    working_dir: /app
+    # 保持容器运行（即使没有前台进程）
+    command: tail -f /dev/null
+    stdin_open: true
+    tty: true
+    # 如果需要 GPU 支持，取消注释下面两行
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]

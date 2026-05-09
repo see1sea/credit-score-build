@@ -33,22 +33,64 @@ Designed for risk analysts, data scientists, and model validators, this pipeline
 ## 📁 Project Structure
 ```bash
 credit-score-build/
-├── config/
-│   └── config.yaml           # Main configuration file
-├── data/
-│   └── raw/
-│       └── your_data.csv     # ← Place your dataset here
-├── models/                   # Saved trained models (.pkl)
-├── results/                  # Metrics, plots, reports
-├── src/                      # Source code modules
-│   ├── data_loader.py
-│   ├── trainer.py
-│   ├── evaluator.py
-│   └── utils.py
-├── main.py                   # Entry point
-├── requirements.txt          # Python dependencies
-├── init_dev_env.sh           # Linux/macOS setup script
-└── README.md
+credit-score-build
+├── Dockerfile
+├── README.md
+├── api.py
+├── artifacts
+│   └── best_params.json
+├── config
+│   └── config.yaml
+├── data
+│   └── raw
+│       └── train.csv
+├── docker-compose.yml
+├── main.py
+├── models
+│   └── credit_model.pkl
+├── reports
+│   └── model_evaluation.xlsx
+├── requirements.txt
+├── results
+└── src
+    ├── __init__.py
+    ├── base
+    │   ├── __init__.py
+    │   ├── evaluate
+    │   │   ├── __init__.py
+    │   │   └── model.py
+    │   ├── lib
+    │   │   └── __init__.py
+    │   └── source
+    │       ├── __init__.py
+    │       └── dataSource.py
+    ├── task
+    │   ├── __init__.py
+    │   ├── dtask
+    │   │   ├── __init__.py
+    │   │   ├── dataLoadTask.py
+    │   │   └── processDataTask.py
+    │   └── mtask
+    │       ├── __init__.py
+    │       ├── modelEvaluatorTask.py
+    │       └── modelTrainTask.py
+    ├── tools
+    │   ├── __init__.py
+    │   ├── cmd
+    │   │   ├── __init__.py
+    │   │   └── train.py
+    │   └── sources
+    │       ├── __init__.py
+    │       └── fileSource.py
+    └── utils
+        ├── __init__.py
+        ├── logore
+        │   ├── __init__.py
+        │   └── logore.py
+        └── metric
+            ├── __init__.py
+            ├── ks.py
+            └── model.py
 ```
 
 
@@ -112,11 +154,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 💡 Tip: Ensure you have git and python >= 3.8 installed.
-#### Option B: Use Initialization Scripts (Optional) 
-If used docker, run:
-Linux/macOS/Ubuntu: ./init_dev_env.sh
-
-These scripts can auto-create directories and set permissions.
 
 ### 4. Run the Pipeline
 ```shell

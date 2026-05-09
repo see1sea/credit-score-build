@@ -1,0 +1,140 @@
+# 文件目录参数
+paths:
+  raw_data: "data/raw/credit_data.csv"
+  model_output: "models/credit_model.pkl"
+  artifacts: "artifacts/"
+  report_dir: "reports/"
+
+params:
+  # 样本切分相关参数
+  date_col: "date"  # 用于OOT拆分的日期列
+  target_col: "target" # 目标列
+  use_oot: True  # 是否使用OOT拆分
+
+  # OOS 设置
+  random_state: 42  #use_oot为 False 改参数生效, 非OOT随机种子
+  test_size: 0.5 #  use_oot为 False 改参数生效, 非OOT切分比例
+
+  # OOT 设置
+  oot_method: "ratio"  # "month" 或 "ratio"
+  oot_ratio: 0.8  # use_oot为True, oot_method为ratio,  OOT比例拆分比例
+  oot_split_month: "2021-10"  # 用于OOT拆分的月份，仅在oot_method为"month"时使用
+
+  # 数据预处理参数
+  suspicious_values: [-999999]  # 需要替换为NA的异常值
+
+  # 分类阈值
+  classification_threshold: 0.5
+
+  # 贝叶斯优化参数
+  bayes_n_iter: 20  # 贝叶斯优化迭代次数
+  bayes_random_state: 42
+  bayes_cv_folds: 5  # 贝叶斯优化交叉验证折数
+  bayes_n_jobs: -1  # 贝叶斯优化并行任务数（避免冲突）
+  bayes_verbose: 3
+
+  # xgb模型参数设置
+  model_type: "XGBoost"  # 模型类型: XGBoost / LightGBM 按需扩展
+  xgb_kwargs:
+    verbosity: 0
+    n_jobs: 1
+    random_state: 42
+
+  # K折交叉验证参数
+  cv_folds: 5  # K折交叉验证折数
+  cv_scoring: "roc_auc"  # 交叉验证评分指标
+  cv_random_state: 42
+
+  # 快速训练参数
+  use_saved_params: True  # 是否使用保存的最佳参数进行快速训练（true: 跳过贝叶斯优化，直接使用保存的参数）
+  saved_params_file: "artifacts/best_params.json"  # 保存最佳参数的文件路径
+
+  # LightGBM 参数空间
+  lgb_params:
+    # 整数类型（离散 → 自动转为 Categorical）
+    num_leaves:
+      type: Integer
+      low: 31
+      high: 127
+      step: 32
+    max_depth:
+      type: Integer
+      low: -1  # LightGBM -1 表示无限制
+      high: 8
+      step: 1
+    n_estimators:
+      type: Integer
+      low: 100
+      high: 500
+      step: 100
+    min_child_samples:
+      type: Integer
+      low: 20
+      high: 100
+      step: 20
+    # 实数类型（离散 → 自动转为 Categorical）
+    learning_rate:
+      type: Real
+      low: 0.01
+      high: 0.3
+      prior: log-uniform
+      step: 0.05
+    subsample:
+      type: Real
+      low: 0.7
+      high: 1.0
+      step: 0.1
+    # 分类类型
+    boosting_type:
+      type: Categorical
+      choices: [ 'gbdt', 'dart', 'goss' ]
+    metric:
+      type: Categorical
+      choices: [ 'auc', 'binary_logloss']
+    tree_method:
+      type: Categorical
+      choices: [ 'auto', 'hist' ]
+    # 连续整数参数（保留 Integer）
+    random_state:
+      type: Integer
+      low: 42
+      high: 100
+      step: 1
+
+  # XGBoost 参数空间
+  xgb_params:
+    n_estimators:
+      type: "Integer"
+      low: 50
+      high: 500
+    max_depth:
+      type: "Integer"
+      low: 3
+      high: 10
+    learning_rate:
+      type: "Real"
+      low: 0.01
+      high: 0.3
+      prior: "log-uniform"
+    subsample:
+      type: "Real"
+      low: 0.6
+      high: 1.0
+    colsample_bytree:
+      type: "Real"
+      low: 0.6
+      high: 1.0
+    min_child_weight:
+      type: "Integer"
+      low: 1
+      high: 10
+    reg_alpha:
+      type: "Real"
+      low: 0.000000001  # 1e-9
+      high: 10
+      prior: "log-uniform"
+    reg_lambda:
+      type: "Real"
+      low: 0.000000001  # 1e-9
+      high: 10
+      prior: "log-uniform"
